@@ -10,7 +10,7 @@ BIN_DIR = bin
 # Files
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
-TARGET = $(BIN_DIR)/memtop
+TARGET = $(BIN_DIR)/profiler
 
 # Default target
 all: $(TARGET)

@@ -10,23 +10,40 @@
 #define PROC "/proc"
 
 
+#include "cpu.hpp"
+#include "memory.hpp"
+#include <iomanip>
+
 CPU_Usage::CPU_Usage() {
-    std::vector<std::string> P_name = CPU_Usage::get_name();
-    std::vector<int> P_ID = CPU_Usage::get_pids();
-    std::vector<float> P_usage = CPU_Usage::get_usage();
+    std::vector<std::string> P_name = get_name();
+    std::vector<int> P_ID = get_pids();
+    std::vector<float> P_usage = get_usage();
 
-    std::cout << "------------------------------------------ CPU Statistics -------------------------------------------" << "\n";
-    std::cout << "Process Name            |           Process_ID               |             CPU_Usage                 " << "\n";
+    // Fetch memory usage
+    MEM_Usage mem;
+    mem.set_pid(P_ID);
+    std::vector<float> mem_usage = mem.get_usage();
 
-    size_t count = std::min({P_name.size(), P_ID.size(), P_usage.size()});
+    std::cout << "------------------------------------------ Process Statistics -------------------------------------------\n";
+    std::cout << std::left
+              << std::setw(25) << "Process Name"
+              << std::setw(15) << "PID"
+              << std::setw(20) << "CPU Usage (%)"
+              << std::setw(20) << "Mem Usage (MB)"
+              << "\n";
+
+    std::cout << std::string(80, '-') << "\n";
+
+    size_t count = std::min({P_name.size(), P_ID.size(), P_usage.size(), mem_usage.size()});
     for (size_t i = 0; i < count; ++i) {
         std::cout << std::left
-                  << std::setw(25) << P_name[i] << "| "
-                  << std::setw(30) << P_ID[i] << "| "
-                  << std::setw(30) << P_usage[i] << "\n";
+                  << std::setw(25) << P_name[i]
+                  << std::setw(15) << P_ID[i]
+                  << std::setw(20) << std::fixed << std::setprecision(2) << P_usage[i]
+                  << std::setw(20) << std::fixed << std::setprecision(2) << mem_usage[i]
+                  << "\n";
     }
 }
-
 
 std::vector<int> CPU_Usage::get_pids(){
 
